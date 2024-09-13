@@ -22,6 +22,7 @@
       "es2020",
       "dom"
     ]
+    // Removed "typeRoots" section
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
