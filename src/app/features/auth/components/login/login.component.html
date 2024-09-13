@@ -1,0 +1,61 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-white flex flex-col justify-center py-12 px-6">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Login to Your Account</h2>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email address</mat-label>
+          <input matInput formControlName="email" required type="email">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email address</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'" required>
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix (click)="showPassword = !showPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="showPassword">
+            <mat-icon>{{showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+        </mat-form-field>
+
+        <div class="flex items-center justify-between">
+          <a routerLink="/forgot-password" class="text-sm font-medium text-blue-600 hover:text-blue-500">
+            Forgot your password?
+          </a>
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" class="w-full" [disabled]="loginForm.invalid || isLoading">
+          {{isLoading ? 'Logging in...' : 'Login'}}
+        </button>
+
+        <mat-error *ngIf="error" class="text-center">{{error}}</mat-error>
+      </form>
+
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Or</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center">
+        <span class="text-sm text-gray-600">
+          Don't have an account?
+          <a routerLink="/register" class="font-medium text-blue-600 hover:text-blue-500">
+            Sign up
+          </a>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>

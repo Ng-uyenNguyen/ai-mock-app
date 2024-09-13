@@ -1,0 +1,76 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-white flex flex-col justify-center py-12 px-6">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Create an Account</h2>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" required>
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="registrationForm.get('username')?.hasError('required')">Username is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email address</mat-label>
+          <input matInput formControlName="email" required type="email">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="registrationForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="registrationForm.get('email')?.hasError('email')">Please enter a valid email address</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" [type]="showPassword ? 'text' : 'password'" required>
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix (click)="showPassword = !showPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="showPassword">
+            <mat-icon>{{showPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="registrationForm.get('password')?.hasError('required')">Password is required</mat-error>
+          <mat-error *ngIf="registrationForm.get('password')?.hasError('minlength')">Password must be at least 6 characters long</mat-error>
+        </mat-form-field>
+
+        <div *ngIf="registrationForm.get('password')?.value" class="mt-2">
+          <div class="text-sm text-gray-600">Password strength: {{getPasswordStrength()}}</div>
+          <mat-progress-bar [color]="getStrengthColor()" [value]="(registrationForm.get('password')?.value.length / 12) * 100"></mat-progress-bar>
+        </div>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Confirm Password</mat-label>
+          <input matInput formControlName="confirmPassword" type="password" required>
+          <mat-icon matPrefix>lock</mat-icon>
+          <mat-error *ngIf="registrationForm.hasError('mismatch')">Passwords do not match</mat-error>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="terms" required>
+          I agree to the <a href="#" class="text-blue-600 hover:text-blue-500">Terms and Conditions</a>
+        </mat-checkbox>
+
+        <button mat-raised-button color="primary" type="submit" class="w-full" [disabled]="registrationForm.invalid">
+          Create Account
+        </button>
+      </form>
+
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">
+              Already have an account?
+            </span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <a routerLink="/login" mat-stroked-button color="primary" class="w-full">
+            Log in
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
