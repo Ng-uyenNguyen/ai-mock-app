@@ -17,6 +17,7 @@ export class MyTaskComponent implements OnInit {
   inProgress: Task[] = [];
   completed: Task[] = [];
   loading: { [key: number]: boolean } = {};
+  isLoadingTasks: boolean = true;
   constructor(private snackBar: MatSnackBar, private taskService: TaskService) {
   }
 
@@ -91,7 +92,7 @@ export class MyTaskComponent implements OnInit {
       next: (tasks) => {
         this.allTask = tasks;
         this.categorizeTask();
-
+        this.isLoadingTasks = false;
       },
       error: (err) => {
         console.log("Failed to load tasks. Please try again.", err);
