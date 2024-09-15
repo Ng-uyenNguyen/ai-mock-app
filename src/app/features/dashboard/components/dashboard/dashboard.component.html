@@ -2,13 +2,21 @@
   <h1 class="text-3xl font-bold mb-6 text-primary">Task Viewing Dashboard</h1>
   <mat-chip-list>
   </mat-chip-list>
+  <div class="relative mb-4">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label class="flex items-center"><mat-icon>search</mat-icon>Search task</mat-label>
+      <input matInput [(ngModel)]="searchQuery" (input)="onSearchChange()" placeholder="Search by title or description" class="pl-10">
+    </mat-form-field>
+  </div>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <!-- Search Bar -->
+
     <mat-form-field appearance="fill" class="w-full">
       <mat-label>Filter by Status</mat-label>
       <mat-select [(ngModel)]="filter.status" (selectionChange)="onFilterChange()">
         <mat-option value="all">All Statuses</mat-option>
-        <mat-option value="to-do">To Do</mat-option>
-        <mat-option value="in-progress">In Progress</mat-option>
+        <mat-option value="toDo">To Do</mat-option>
+        <mat-option value="inProgress">In Progress</mat-option>
         <mat-option value="completed">Completed</mat-option>
       </mat-select>
     </mat-form-field>
@@ -118,12 +126,7 @@
       </mat-card>
     </div>
 
-    <mat-paginator 
-      [length]="totalTasks"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="[5, 10, 25]"
-      (page)="onPageChange($event)"
-      class="mt-6">
+    <mat-paginator [length]="totalTasks" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25]" (page)="onPageChange($event)" class="mt-6">
     </mat-paginator>
   </ng-container>
 </div>

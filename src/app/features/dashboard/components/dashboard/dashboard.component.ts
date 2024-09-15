@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Task } from '../../models/task.model';
 import { TaskService } from '../../services/task.service';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-task-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   tasks: Task[] = [];
@@ -18,13 +18,24 @@ export class DashboardComponent implements OnInit {
   pageSize = 5;
   totalTasks = 0;
   filter = { status: 'all', priority: 'all', dueDate: 'all' };
+  searchQuery: string = '';
 
-  displayedColumns: string[] = ['title', 'description', 'deadline', 'priority', 'status'];
+  displayedColumns: string[] = [
+    'title',
+    'description',
+    'deadline',
+    'priority',
+    'status',
+  ];
 
   constructor(private taskService: TaskService) { }
 
   ngOnInit() {
     this.loadTasks();
+  }
+
+  onSearchChange(): void {
+    this.applyFilter();
   }
 
   loadTasks() {
@@ -37,21 +48,28 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.error = "Failed to load tasks. Please try again.";
+        this.error = 'Failed to load tasks. Please try again.';
         this.loading = false;
-      }
+      },
     });
   }
 
   applyFilter() {
-    this.filteredTasks = this.tasks.filter(task => {
-      return (this.filter.status === 'all' || task.status === this.filter.status) &&
-        (this.filter.priority === 'all' || task.priority === this.filter.priority) &&
-        (this.filter.dueDate === 'all' || (
-          this.filter.dueDate === 'overdue' ? new Date(task.deadline || '') < new Date() :
-            this.filter.dueDate === 'upcoming' ? new Date(task.deadline || '') >= new Date() :
-              true
-        ));
+    this.searchQuery = this.searchQuery.trim().toLowerCase();
+    this.filteredTasks = this.tasks.filter((task) => {
+      return (
+        (task.description.toLowerCase().includes(this.searchQuery) ||
+          task.title.toLowerCase().includes(this.searchQuery)) &&
+        (this.filter.status === 'all' || task.status === this.filter.status) &&
+        (this.filter.priority === 'all' ||
+          task.priority === this.filter.priority) &&
+        (this.filter.dueDate === 'all' ||
+          (this.filter.dueDate === 'overdue'
+            ? new Date(task.deadline || '') < new Date()
+            : this.filter.dueDate === 'upcoming'
+              ? new Date(task.deadline || '') >= new Date()
+              : true))
+      );
     });
     this.totalTasks = this.filteredTasks.length;
     this.updatePage();
@@ -59,7 +77,10 @@ export class DashboardComponent implements OnInit {
 
   updatePage() {
     const startIndex = this.currentPage * this.pageSize;
-    this.currentTasks = this.filteredTasks.slice(startIndex, startIndex + this.pageSize);
+    this.currentTasks = this.filteredTasks.slice(
+      startIndex,
+      startIndex + this.pageSize
+    );
   }
 
   onPageChange(event: PageEvent) {
