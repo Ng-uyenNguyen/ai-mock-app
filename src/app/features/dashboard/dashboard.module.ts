@@ -18,6 +18,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TaskCardComponent } from './components/my-task/task-card/task-card.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { MatInputModule } from '@angular/material/input';
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -42,7 +43,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     MatProgressSpinnerModule,
     DragDropModule,
     MatProgressBarModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatInputModule
   ]
 })
 export class DashboardModule { }

@@ -9,7 +9,7 @@
         {{ task.priority }}
       </mat-chip>
     </mat-chip-list>
-    <mat-card-subtitle class="text-sm">{{ task.deadline | date: 'short' }}</mat-card-subtitle>
+    <mat-card-subtitle class="text-sm">{{ task.deadline | date: 'dd/MM/yyyy' }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="p-4">
     <p class="text-gray-700 font-medium">{{ task.description }}</p>
