@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://your-api-url.com/api'; // Replace with your API URL
+  private apiUrl = environment.apiUrl; // Replace with your API URL
+
+  isLoggedIn$ = new BehaviorSubject(false);
 
   constructor(private http: HttpClient) { }
 
@@ -24,15 +26,18 @@ export class AuthService {
     //     return response;
     //   })
     // );
-    return of(true);
+    localStorage.setItem('token', 'loggedIn');
+    this.isLoggedIn$.next(true);
+    return this.isLoggedIn$;
   }
 
   logout(): void {
     // Remove the token from local storage
     localStorage.removeItem('token');
+    this.isLoggedIn$.next(false);
   }
 
-  isAuthenticated(): boolean {
+  isAuthenticated() {
     // Check if the token exists in local storage
     return !!localStorage.getItem('token');
   }
