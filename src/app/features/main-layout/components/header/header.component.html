@@ -1,0 +1,43 @@
+<header class="bg-white shadow-md">
+  <div class="container mx-auto px-4 py-2">
+    <div class="flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <!-- <mat-icon class="text-primary text-3xl mr-2">task</mat-icon> -->
+        <span class="text-xl font-semibold text-primary">Tasks Management Mock</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="hidden md:flex space-x-4">
+        <a mat-button routerLink="/dashboard/viewTask" routerLinkActive="bg-primary text-blue-700">Dashboard</a>
+        <a mat-button routerLink="/dashboard/myTask" routerLinkActive="bg-primary text-blue-700">My Task</a>
+        <a mat-button routerLink="analytics" routerLinkActive="bg-primary text-blue-700">Analytics</a>
+      </nav>
+
+      <!-- User Menu -->
+      <div class="flex items-center">
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="ml-2">
+          <mat-chip-list>
+            <mat-chip-avatar>
+              <img src="https://material.angular.io/assets/img/examples/shiba1.jpg" alt="Shiba Inu" class="w-10 h-10 rounded-full"/>
+          </mat-chip-avatar>
+          </mat-chip-list>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item disabled>
+            <mat-icon>account_circle</mat-icon>
+            <span>{{ user.name }}</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/profile">
+            <mat-icon>settings</mat-icon>
+            <span>Profile Settings</span>
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </div>

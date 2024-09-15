@@ -5,30 +5,19 @@
     <div
       cdkDropList
       #todoList="cdkDropList"
-      [cdkDropListData]="todo"
+      [cdkDropListData]="toDo"
       [cdkDropListConnectedTo]="[inProgressList, completedList]"
       class="kanban-column"
-      [ngClass]="getColumnColor('todo')"
-      id="todo"
+      [ngClass]="getColumnColor('toDo')"
+      id="toDo"
       (cdkDropListDropped)="drop($event)">
       <h2 class="text-xl font-semibold mb-4">To Do</h2>
       <div
         class="task-card"
-        *ngFor="let task of todo"
+        *ngFor="let task of toDo"
         cdkDrag
         [cdkDragDisabled]="loading[task.id]">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>{{ task.title }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p class="text-blue-400 font-medium">{{task.deadline}}</p>
-            <p>{{ task.description }}</p>
-          </mat-card-content>
-          <mat-card-actions *ngIf="loading[task.id]">
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-          </mat-card-actions>
-        </mat-card>
+        <app-task-card [task]="task" [loading]="loading"></app-task-card>
       </div>
     </div>
 
@@ -47,18 +36,7 @@
         *ngFor="let task of inProgress"
         cdkDrag
         [cdkDragDisabled]="loading[task.id]">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>{{ task.title }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p class="text-blue-400 font-medium">{{task.deadline}}</p>
-            <p>{{ task.description }}</p>
-          </mat-card-content>
-          <mat-card-actions *ngIf="loading[task.id]">
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-          </mat-card-actions>
-        </mat-card>
+        <app-task-card [task]="task" [loading]="loading"></app-task-card>
       </div>
     </div>
 
@@ -77,18 +55,7 @@
         *ngFor="let task of completed"
         cdkDrag
         [cdkDragDisabled]="loading[task.id]">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>{{ task.title }}</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <p class="text-blue-400 font-medium">{{task.deadline}}</p>
-            <p>{{ task.description }}</p>
-          </mat-card-content>
-          <mat-card-actions *ngIf="loading[task.id]">
-            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-          </mat-card-actions>
-        </mat-card>
+        <app-task-card [task]="task" [loading]="loading"></app-task-card>
       </div>
     </div>
   </div>

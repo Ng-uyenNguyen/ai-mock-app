@@ -1,7 +1,9 @@
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Task } from '../../models/task.model';
+import { Task, TaskStatus } from '../../models/task.model';
+import { TaskService } from '../../services/task.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-my-task',
@@ -10,25 +12,16 @@ import { Task } from '../../models/task.model';
 })
 export class MyTaskComponent implements OnInit {
 
-  todo: Task[] = [];
+  allTask: Task[] = [];
+  toDo: Task[] = [];
   inProgress: Task[] = [];
   completed: Task[] = [];
   loading: { [key: number]: boolean } = {};
-
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar, private taskService: TaskService) {
+  }
 
   ngOnInit() {
-    // Simulating initial data load
-    this.todo = [
-      { id: 1, title: 'Create new product page', description: 'Design and implement a new product page layout', status: 'todo', deadline: '2024-07-15' },
-      { id: 2, title: 'Update inventory system', description: 'Integrate real-time inventory tracking', status: 'todo', deadline: '2024-07-15' },
-    ];
-    this.inProgress = [
-      { id: 3, title: 'Optimize checkout process', description: 'Streamline the checkout flow for better conversion', status: 'inProgress', deadline: '2024-07-15' },
-    ];
-    this.completed = [
-      { id: 4, title: 'Launch email campaign', description: 'Send out newsletter to subscribers', status: 'completed', deadline: '2024-07-15' },
-    ];
+    this.loadAllTasks();
   }
 
   drop(event: CdkDragDrop<Task[]>) {
@@ -36,21 +29,22 @@ export class MyTaskComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const task = event.previousContainer.data[event.previousIndex];
-      this.updateTaskStatus(task, event.container.id as 'todo' | 'inProgress' | 'completed');
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex,
       );
+      this.updateTaskStatus(task, event.container.id as TaskStatus);
     }
   }
 
-  updateTaskStatus(task: Task, newStatus: 'todo' | 'inProgress' | 'completed') {
+  updateTaskStatus(task: Task, newStatus: TaskStatus) {
     this.loading[task.id] = true;
     // Simulating an API call
     setTimeout(() => {
-      if (Math.random() > 0.8) {
+      const isSuccess = Math.random() > 0.2;
+      if (!isSuccess) {
         // Simulating a failure scenario
         this.loading[task.id] = false;
         this.snackBar.open('Failed to update task status. Please try again.', 'Close', {
@@ -58,7 +52,7 @@ export class MyTaskComponent implements OnInit {
           panelClass: ['bg-red-100', 'text-red-900']
         });
         // Revert the task to its original position
-        this.revertTaskPosition(task);
+        this.revertTaskPosition(task, newStatus);
       } else {
         task.status = newStatus;
         this.loading[task.id] = false;
@@ -70,9 +64,9 @@ export class MyTaskComponent implements OnInit {
     }, 1000);
   }
 
-  revertTaskPosition(task: Task) {
+  revertTaskPosition(task: Task, newStatus: TaskStatus) {
     const sourceList = this[task.status];
-    const targetList = task.status === 'todo' ? this.inProgress : this.todo;
+    const targetList = this[newStatus];
     const taskIndex = targetList.findIndex(t => t.id === task.id);
     if (taskIndex !== -1) {
       transferArrayItem(targetList, sourceList, taskIndex, sourceList.length);
@@ -81,7 +75,7 @@ export class MyTaskComponent implements OnInit {
 
   getColumnColor(status: string): string {
     switch (status) {
-      case 'todo':
+      case 'toDo':
         return 'bg-gray-100';
       case 'inProgress':
         return 'bg-yellow-100';
@@ -90,6 +84,25 @@ export class MyTaskComponent implements OnInit {
       default:
         return 'bg-white';
     }
+  }
+
+  loadAllTasks() {
+    this.taskService.getTasks().subscribe({
+      next: (tasks) => {
+        this.allTask = tasks;
+        this.categorizeTask();
+
+      },
+      error: (err) => {
+        console.log("Failed to load tasks. Please try again.", err);
+      }
+    });
+  }
+
+  categorizeTask() {
+    this.toDo = this.allTask.filter(task => task.status === TaskStatus.toDo);
+    this.inProgress = this.allTask.filter(task => task.status === TaskStatus.inProgress);
+    this.completed = this.allTask.filter(task => task.status === TaskStatus.completed);
   }
 
 }
