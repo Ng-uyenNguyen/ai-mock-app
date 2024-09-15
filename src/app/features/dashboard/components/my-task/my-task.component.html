@@ -1,0 +1,95 @@
+<div class="container mx-auto p-4">
+  <h1 class="text-3xl font-bold mb-6 text-center">Task Management Dashboard</h1>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div
+      cdkDropList
+      #todoList="cdkDropList"
+      [cdkDropListData]="todo"
+      [cdkDropListConnectedTo]="[inProgressList, completedList]"
+      class="kanban-column"
+      [ngClass]="getColumnColor('todo')"
+      id="todo"
+      (cdkDropListDropped)="drop($event)">
+      <h2 class="text-xl font-semibold mb-4">To Do</h2>
+      <div
+        class="task-card"
+        *ngFor="let task of todo"
+        cdkDrag
+        [cdkDragDisabled]="loading[task.id]">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="text-blue-400 font-medium">{{task.deadline}}</p>
+            <p>{{ task.description }}</p>
+          </mat-card-content>
+          <mat-card-actions *ngIf="loading[task.id]">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <div
+      cdkDropList
+      #inProgressList="cdkDropList"
+      [cdkDropListData]="inProgress"
+      [cdkDropListConnectedTo]="[todoList, completedList]"
+      class="kanban-column"
+      [ngClass]="getColumnColor('inProgress')"
+      id="inProgress"
+      (cdkDropListDropped)="drop($event)">
+      <h2 class="text-xl font-semibold mb-4">In Progress</h2>
+      <div
+        class="task-card"
+        *ngFor="let task of inProgress"
+        cdkDrag
+        [cdkDragDisabled]="loading[task.id]">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="text-blue-400 font-medium">{{task.deadline}}</p>
+            <p>{{ task.description }}</p>
+          </mat-card-content>
+          <mat-card-actions *ngIf="loading[task.id]">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+
+    <div
+      cdkDropList
+      #completedList="cdkDropList"
+      [cdkDropListData]="completed"
+      [cdkDropListConnectedTo]="[todoList, inProgressList]"
+      class="kanban-column"
+      [ngClass]="getColumnColor('completed')"
+      id="completed"
+      (cdkDropListDropped)="drop($event)">
+      <h2 class="text-xl font-semibold mb-4">Completed</h2>
+      <div
+        class="task-card"
+        *ngFor="let task of completed"
+        cdkDrag
+        [cdkDragDisabled]="loading[task.id]">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="text-blue-400 font-medium">{{task.deadline}}</p>
+            <p>{{ task.description }}</p>
+          </mat-card-content>
+          <mat-card-actions *ngIf="loading[task.id]">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
